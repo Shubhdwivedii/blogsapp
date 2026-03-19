@@ -43,8 +43,8 @@ export default function AppContextProvider({children}){
     }
 
     useEffect(() => {
-            fetchBlogs()
-        },[page]);
+        fetchBlogs();
+    },[page]);
 
     return <AppContext.Provider value={value}>
         {children}
