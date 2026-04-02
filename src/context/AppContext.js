@@ -5,18 +5,28 @@ export const AppContext = createContext();
 
 export default function AppContextProvider({children}){
 
-    const url = baseUrl;
+    // const url = baseUrl;
 
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [blogs, setBlogs] = useState([]);
     const [totalPages, setTotalPages] = useState(null);
 
-    async function fetchBlogs() {
+    async function fetchBlogs(page = 1, tag = null, category) {
+        setLoading(true);
+        let url = `${baseUrl}?page=${page}`;
+        if(tag){
+            url += `&tag=${tag}`;
+        }
+        if(category){
+            url += `&category=${category}`;
+        }
         try {
-            setLoading(true);
-            const res = await fetch(`${url}?page=${page}`);
+            const res = await fetch(url);
             const data = await res.json();
+            if(!data.posts || data.posts.length === 0){
+                throw new Error("Something went wrong");
+            }
             setBlogs(data.posts);
             setTotalPages(data.totalPages);
             setPage(data.page);
